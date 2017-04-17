@@ -24,7 +24,7 @@
 <script src="./vendor/tween.min.js"></script>
 <script type="text/javascript">/**
 ** author:YorkChan
-** date:2016-12-18
+** date:2017-03-18
 **/
 class Page {
 	constructor() {
@@ -89,7 +89,6 @@ class Page {
 		TWEEN.removeAll();
 		let points = orginGeo.vertices;
 		const n = Math.sqrt(points.length);
-		// let geometry = new THREE.SphereGeometry(20,50,50);
 		let geometry;
 		switch(type) {
 			case TYPE.SPHERE : geometry = new THREE.SphereGeometry(20,n,n);break;
