@@ -59,27 +59,32 @@ class Page {
 		}
 		render();
 	}
+	async animateShow() {
+		this.transform(this.particles.geometry,4000,'json','./assets/WaltHeadLo.js');
+		await Page.sleep(8000);
+		this.transform(this.particles.geometry,4000,'torus');
+		await Page.sleep(8000);
+		this.transform(this.particles.geometry,4000,'cone');
+		await Page.sleep(8000);
+		this.transform(this.particles.geometry,4000,'sphere');
+		await Page.sleep(8000);
+	}
 	start() {
 		this.createLight();
-		this.particles = this.createParticles(2500,1,50);
-		this.transform(this.particles.geometry,5000,'cylinder');
-		setTimeout(() => {
-			this.transform(this.particles.geometry,5000,'sphere');
-		},6000)
-		setTimeout(() => {
-			this.transform(this.particles.geometry,5000,'torus');
-		},12000)
-		setTimeout(() => {
-			this.transform(this.particles.geometry,5000,'cone');
-		},18000)
+		this.particles = this.createParticles(1600,1.5,50);
+			this.animateShow();
+		setInterval(() => {
+			this.animateShow();
+		},32000)
 	}
-	transform(orginGeo,duration,type) {
+	async transform(orginGeo,duration,type,path) {
 		const TYPE = {
 			CUBE: 'cube',
 			SPHERE: 'sphere',
 			CONE: 'cone',
 			CYLINDER: 'cylinder',
-			TORUS : 'torus'
+			TORUS : 'torus',
+			JSON : 'json'
 		};
 		TWEEN.removeAll();
 		let points = orginGeo.vertices;
@@ -91,6 +96,9 @@ class Page {
 			case TYPE.CONE : geometry = new THREE.ConeGeometry(20,15,n,n);break;
 			case TYPE.CYLINDER : geometry = new THREE.CylinderGeometry( 8, 8, 20, n,n );break;
 			case TYPE.TORUS : geometry = new THREE.TorusGeometry( 15, 8, n, n );break;
+			case TYPE.JSON: {
+				geometry = await Page.getModel(path);
+			};break;
 		}
 		
 		for(let i in points) {
@@ -101,14 +109,35 @@ class Page {
 						})
 						.start();
 		}
+		let originColor = this.material.color;
+		new TWEEN.Tween(originColor)
+					.to({r:Math.random(),g:Math.random(),b:Math.random()})
+					.onUpdate(() => {
+						this.material.color.set( this.r,this.g,this.b );
+					})
+					.start();
 	}
 	update() {
 		TWEEN.update();
 	}
-
+	static getModel(path) {
+		return new Promise(resolve => {
+			let loader = new THREE.JSONLoader();
+			loader.load(path,geometry => {
+				resolve(geometry);
+			})
+		})
+	}
+	static sleep(time) {
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve();
+			},time);
+		})
+	}
 	createParticles(num,size,area) {
 		let drawArc = function() {
-			// body...
+			// 创建画布
 			var canvas = document.createElement('canvas');
 			canvas.width	= 100;
 			canvas.height	= 100;
@@ -124,7 +153,7 @@ class Page {
 		let geometry = new THREE.Geometry();
 		for (let i = 0; i < num; i ++ ) {
 
-			var vertex = new THREE.Vector3();
+			let vertex = new THREE.Vector3();
 			vertex.x = Math.random() * area - area/2;
 			vertex.y = Math.random() * area - area/2;
 			vertex.z = Math.random() * area - area/2;
@@ -132,8 +161,8 @@ class Page {
 			geometry.vertices.push( vertex );
 
 		}
-		var material = new THREE.PointsMaterial( { size: 1,color: 0xffffff ,sizeAttenuation:false, transparent: true } );
-		let particles = new THREE.Points(geometry,material);
+		this.material = new THREE.PointsMaterial( { size: size,color: 0xffffff ,sizeAttenuation:false, transparent: true } );
+		let particles = new THREE.Points(geometry,this.material);
 		this.scene.add(particles);
 		return particles;
 	}
