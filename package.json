@@ -1,0 +1,44 @@
+{
+  "name": "web3d-example",
+  "version": "1.0.0",
+  "description": "just some web3d examples base in three.js with  webpack2 and es6",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack/webpack.dev.js --watch",
+    "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js --progress --display-error-details --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YorkChan94/web3d-examples.git"
+  },
+  "keywords": [
+    "three.js",
+    "es6",
+    "webpack"
+  ],
+  "author": "YorkChan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YorkChan94/web3d-examples/issues"
+  },
+  "homepage": "https://github.com/YorkChan94/web3d-examples#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-latest": "^6.24.1",
+    "babel-runtime": "^6.23.0",
+    "clean-webpack-plugin": "^0.1.16",
+    "cross-env": "^5.0.0",
+    "file-loader": "^0.11.1",
+    "html-webpack-plugin": "^2.28.0",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5",
+    "webpack-merge": "^4.1.0"
+  },
+  "dependencies": {
+    "three": "^0.85.2",
+    "three-orbit-controls": "^82.1.0",
+    "tween.js": "^16.6.0"
+  }
+}

@@ -1,33 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
-	<title>webVR-particles</title>
-	<style>
-		* {
-			padding: 0;
-			margin: 0;
-		}
-		html,body {
-			height: 100%;
-		}
-		body {
-			overflow-y: hidden;
-		}
-	</style>
-</head>
-<body>
-</body>
-<script src="./vendor/three.min.js"></script>
-<script src="./vendor/OrbitControls.js"></script>
-<script src="./vendor/tween.min.js"></script>
-<script type="text/javascript">/**
+/**
 ** author:YorkChan
 ** date:2017-03-18
 **/
+import TWEEN from 'tween.js';
+import ASSET_WaltHeadLo from '../assets/WaltHeadLo.json';
+const OrbitControls = require('three-orbit-controls')(THREE);
 class Page {
 	constructor() {
+        debugger
 		this.scene = new THREE.Scene();
 		this.camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,10000);
 		this.camera.position.set(0,20,100);
@@ -38,7 +18,7 @@ class Page {
 		});
 		this.renderer.setSize(window.innerWidth,window.innerHeight);
 		this.renderer.setClearColor(0x111111);
-		this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
+		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 		document.body.appendChild(this.renderer.domElement);
 		this.resize();
 		this.start();
@@ -60,7 +40,7 @@ class Page {
 		render();
 	}
 	async animateShow() {
-		this.transform(this.particles.geometry,4000,'json','./assets/WaltHeadLo.js');
+		this.transform(this.particles.geometry,4000,'json',ASSET_WaltHeadLo);
 		await Page.sleep(8000);
 		this.transform(this.particles.geometry,4000,'torus');
 		await Page.sleep(8000);
@@ -183,5 +163,3 @@ class Page {
 	}
 }
 new Page();
-</script>
-</html>
