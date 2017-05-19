@@ -7,7 +7,6 @@ import ASSET_WaltHeadLo from '../assets/WaltHeadLo.json';
 const OrbitControls = require('three-orbit-controls')(THREE);
 class Page {
 	constructor() {
-        debugger
 		this.scene = new THREE.Scene();
 		this.camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,10000);
 		this.camera.position.set(0,20,100);
@@ -41,21 +40,19 @@ class Page {
 	}
 	async animateShow() {
 		this.transform(this.particles.geometry,4000,'json',ASSET_WaltHeadLo);
-		await Page.sleep(8000);
+		await Page.delay(8000);
 		this.transform(this.particles.geometry,4000,'torus');
-		await Page.sleep(8000);
+		await Page.delay(8000);
 		this.transform(this.particles.geometry,4000,'cone');
-		await Page.sleep(8000);
+		await Page.delay(8000);
 		this.transform(this.particles.geometry,4000,'sphere');
-		await Page.sleep(8000);
+		await Page.delay(8000);
 	}
 	start() {
 		this.createLight();
 		this.particles = this.createParticles(1600,1.5,50);
 			this.animateShow();
-		setInterval(() => {
-			this.animateShow();
-		},32000)
+		Page.loop(32000,() => this.animateShow());
 	}
 	async transform(orginGeo,duration,type,path) {
 		const TYPE = {
@@ -107,13 +104,34 @@ class Page {
 			})
 		})
 	}
-	static sleep(time) {
-		return new Promise(resolve => {
-			setTimeout(() => {
-				resolve();
-			},time);
-		})
+	static loop(time,callback) {
+            let start=false;
+            let render = timestamp => {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+                if (progress > time) {
+					start = timestamp;
+					callback();
+                }
+                window.requestAnimationFrame(render);
+            };
+            window.requestAnimationFrame(render);
 	}
+	static delay(time) {
+        return new Promise(resolve => {
+            let start=false;
+            let render = timestamp => {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+                if (progress < time) {
+                    window.requestAnimationFrame(render);
+                } else {
+                    resolve();
+                }
+            };
+            window.requestAnimationFrame(render);
+        });
+    }
 	createParticles(num,size,area) {
 		let drawArc = function() {
 			// 创建画布
