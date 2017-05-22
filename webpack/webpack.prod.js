@@ -25,9 +25,9 @@ module.exports = webpackMerge(webpackConfig,{
         NODE_ENV: "'development'"
       }
     }),
-    new CleanWebpackPlugin(['dist'], {
-      root: path.resolve(__dirname, '..')
-    }),
+    // new CleanWebpackPlugin(['dist'], {
+    //   root: path.resolve(__dirname, '..')
+    // }),
     new UglifyJsPlugin({
       compressor: {
         warnings: false

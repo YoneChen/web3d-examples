@@ -6,7 +6,7 @@ const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 module.exports = {
 
   entry: {
-    'app': './src/app/particles.js'
+    'app': './src/app/animate.js'
   },
 
   module: {
