@@ -51,7 +51,7 @@ class Page {
 	start() {
 		this.createLight();
 		this.particles = this.createParticles(1600,1.5,50);
-			this.animateShow();
+		this.animateShow();
 		Page.loop(32000,() => this.animateShow());
 	}
 	async transform(orginGeo,duration,type,path) {
@@ -77,21 +77,21 @@ class Page {
 			};break;
 		}
 		
-		for(let i in points) {
+		for(let i in points) { // 遍历每个粒子，设置目标点位置
 			new TWEEN.Tween(points[i])
-						.to(geometry.vertices[i],duration)
-						.onUpdate(() => {
-							orginGeo.verticesNeedUpdate = true;
-						})
-						.start();
+				.to(geometry.vertices[i],duration)
+				.onUpdate(() => {
+					orginGeo.verticesNeedUpdate = true;
+				})
+				.start(); // 开启缓动动画
 		}
 		let originColor = this.material.color;
-		new TWEEN.Tween(originColor)
-					.to({r:Math.random(),g:Math.random(),b:Math.random()})
-					.onUpdate(() => {
-						this.material.color.set( this.r,this.g,this.b );
-					})
-					.start();
+		new TWEEN.Tween(originColor) // 改变粒子颜色
+				.to({r:Math.random(),g:Math.random(),b:Math.random()})
+				.onUpdate(() => {
+					this.material.color.set( this.r,this.g,this.b );
+				})
+				.start();
 	}
 	update() {
 		TWEEN.update();
@@ -118,27 +118,27 @@ class Page {
             window.requestAnimationFrame(render);
 	}
 	static delay(time) { //延迟时间，相当于settimeout
-        return new Promise(resolve => {
-            let start=false;
-            let render = timestamp => {
-                if (!start) start = timestamp;
-                let progress = timestamp - start;
-                if (progress < time) {
-                    window.requestAnimationFrame(render);
-                } else {
-                    resolve();
-                }
+            return new Promise(resolve => {
+                let start=false;
+                let render = timestamp => {
+                    if (!start) start = timestamp;
+                    const progress = timestamp - start;
+                    if (progress < time) {
+                        window.requestAnimationFrame(render);
+                    } else {
+                        resolve();
+                    }
             };
             window.requestAnimationFrame(render);
         });
     }
-	createParticles(num,size,area) {
-		let drawArc = function() {
+	createParticles(num,size,area) { // 创建粒子系统
+		let drawArc = () => {
 			// 创建画布
-			var canvas = document.createElement('canvas');
+			const canvas = document.createElement('canvas');
 			canvas.width	= 100;
 			canvas.height	= 100;
-			var ctx = canvas.getContext('2d');
+			const ctx = canvas.getContext('2d');
 			ctx.beginPath();
 			ctx.arc(50,50,50, 0 ,2*Math.PI,true);
 			ctx.fillStyle = "#ffffff";
@@ -146,7 +146,7 @@ class Page {
 			return canvas;
 		};
 		let texture = new THREE.Texture(drawArc());
-		texture.needsUpdate	= true;
+		texture.needsUpdate = true;
 		let geometry = new THREE.Geometry();
 		for (let i = 0; i < num; i ++ ) {
 
@@ -165,8 +165,8 @@ class Page {
 	}
 	createLight() {
 		// 创建光线
-        this.scene.add(new THREE.AmbientLight(0xFFFFFF));
-        let light = new THREE.DirectionalLight( 0xffffff, 0.3 );
+        	this.scene.add(new THREE.AmbientLight(0xFFFFFF));
+        	const light = new THREE.DirectionalLight( 0xffffff, 0.3 );
 		light.position.set( 50, 50, 50 );
 		light.castShadow = true;
 		light.shadow.mapSize.width = 2048;
