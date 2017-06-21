@@ -96,7 +96,7 @@ class Page {
 	update() {
 		TWEEN.update();
 	}
-	static getModel(path) {
+	static getModel(path) { // 获取model的几何形状
 		return new Promise(resolve => {
 			let loader = new THREE.JSONLoader();
 			loader.load(path,geometry => {
@@ -104,7 +104,7 @@ class Page {
 			})
 		})
 	}
-	static loop(time,callback) {
+	static loop(time,callback) { // 循环，相当于setInterval
             let start=false;
             let render = timestamp => {
                 if (!start) start = timestamp;
@@ -117,7 +117,7 @@ class Page {
             };
             window.requestAnimationFrame(render);
 	}
-	static delay(time) {
+	static delay(time) { //延迟时间，相当于settimeout
         return new Promise(resolve => {
             let start=false;
             let render = timestamp => {
